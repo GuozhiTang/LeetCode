@@ -36,54 +36,104 @@
 
 // @lc code=start
 class Solution {
-    // Time: O()
-    // Space: O()
+
+    // Time: O(logn)
+    // Space: O(1)
     // Binary Search
     public int[] searchRange(int[] nums, int target) {
-        int[] res = new int[2];
-        // Corner Cases
+        // Corner cases
         if (nums == null || nums.length == 0) {
-            res[0] = -1;
-            res[1] = -1;
-            return res;
+            return new int[] {-1, -1};
         }
 
-        int right = findRightMost(nums, target);
-
-        int left = findLeftMost(nums, target);
-
-        res[0] = left;
-        res[1] = right;
-
-        return res;
-    }
-
-    private int findRightMost(int[] nums, int target) {
-        int begin = 0, end = nums.length - 1;
-        while (begin + 1 < end) {
-            int mid = begin + (end - begin) / 2;
-            if (nums[mid] == target) begin = mid;
-            else if (nums[mid] < target) begin = mid;
-            else end = mid;
+        // Search for the leftIndex of range
+        int leftIndex = -1;
+        int startLeft = 0, endLeft = nums.length - 1;
+        while (startLeft + 1 < endLeft) {
+            int midleft = startLeft + (endLeft - startLeft) / 2;
+            if (nums[midleft] < target) {
+                startLeft = midleft;
+            } else {
+                endLeft = midleft;
+            }
         }
-        if (nums[begin] == target) return begin;
-        if (nums[end] == target) return end;
-
-        return -1;
-    }
-
-    private int findLeftMost(int[] nums, int target) {
-        int begin = 0, end = nums.length - 1;
-        while (begin + 1 < end) {
-            int mid = begin + (end - begin) / 2;
-            if (nums[mid] == target) end = mid;
-            else if (nums[mid] < target) begin = mid;
-            else end = mid;
+        // Judge the left one first
+        if (nums[startLeft] == target) {
+            leftIndex = startLeft;
+        } else if (nums[endLeft] == target) {
+            leftIndex = endLeft;
         }
-        if (nums[begin] == target) return begin;
-        if (nums[end] == target) return end;
-        return -1;
+
+        // Search for the rightIndex of range
+        int rightIndex = -1;
+        int startRight = 0, endRight = nums.length - 1;
+        while (startRight + 1 < endRight) {
+            int midRight = startRight + (endRight - startRight) / 2;
+            if (nums[midRight] > target) {
+                endRight = midRight;
+            } else {
+                startRight = midRight;
+            }
+        }
+        // Judge the right one first
+        if (nums[endRight] == target) {
+            rightIndex = endRight;
+        } else if (nums[startRight] == target) {
+            rightIndex = startRight;
+        }
+        return new int[] {leftIndex, rightIndex};
     }
+
+    /* ============================== */
+
+    // // Time: O()
+    // // Space: O()
+    // // Binary Search
+    // public int[] searchRange(int[] nums, int target) {
+    //     int[] res = new int[2];
+    //     // Corner Cases
+    //     if (nums == null || nums.length == 0) {
+    //         res[0] = -1;
+    //         res[1] = -1;
+    //         return res;
+    //     }
+
+    //     int right = findRightMost(nums, target);
+
+    //     int left = findLeftMost(nums, target);
+
+    //     res[0] = left;
+    //     res[1] = right;
+
+    //     return res;
+    // }
+
+    // private int findRightMost(int[] nums, int target) {
+    //     int begin = 0, end = nums.length - 1;
+    //     while (begin + 1 < end) {
+    //         int mid = begin + (end - begin) / 2;
+    //         if (nums[mid] == target) begin = mid;
+    //         else if (nums[mid] < target) begin = mid;
+    //         else end = mid;
+    //     }
+    //     if (nums[begin] == target) return begin;
+    //     if (nums[end] == target) return end;
+
+    //     return -1;
+    // }
+
+    // private int findLeftMost(int[] nums, int target) {
+    //     int begin = 0, end = nums.length - 1;
+    //     while (begin + 1 < end) {
+    //         int mid = begin + (end - begin) / 2;
+    //         if (nums[mid] == target) end = mid;
+    //         else if (nums[mid] < target) begin = mid;
+    //         else end = mid;
+    //     }
+    //     if (nums[begin] == target) return begin;
+    //     if (nums[end] == target) return end;
+    //     return -1;
+    // }
 
 }
 // @lc code=end
