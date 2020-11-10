@@ -49,6 +49,36 @@
 
 // @lc code=start
 class Solution {
+
+    // Time: O(logn)
+    // Space: O(1)
+    // Binary Search
+    public int findPeakElement(int[] nums) {
+        // Corner Case
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+
+        int start = 0, end = nums.length - 1;
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            // if ascending
+            if (nums[mid] < nums[mid + 1]) {
+                start = mid;
+            } else { // if decending
+                end = mid;
+            }
+        }
+
+        if (nums[start] > nums[end]) {
+            return start;
+        } else {
+            return end;
+        }
+    }
+
+
+
     // Binary Search
     // Time: O(logn)
     // Space: O(1)
@@ -68,20 +98,6 @@ class Solution {
     //     }
     //     return end;
     // }
-
-    public int findPeakElement(int[] nums) {
-        // Corner Cases
-        if (nums == null || nums.length == 0) return -1;
-
-        int begin = 0, end = nums.length - 1;
-        while (begin + 1 < end) {
-            int mid = begin + (end - begin) / 2;
-            if (nums[mid] < nums[mid + 1]) begin = mid;
-            else end = mid;
-        }
-        if (nums[begin] > nums[end]) return begin;
-        else return end;
-    }
 }
 // @lc code=end
 
