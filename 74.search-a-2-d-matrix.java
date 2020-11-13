@@ -70,13 +70,13 @@ class Solution {
 
         // Try to use Binary Search to get the index of target if it exists
         // Try to convert linear index to 2D matrix
-        int length = matrix[0].length, width = matrix.length;
-        int start = 0, end = length * width - 1;
+        int col = matrix[0].length, row = matrix.length;
+        int start = 0, end = col * row - 1;
         while (start + 1 < end) {
             int mid = start + (end - start) / 2;
-            if (matrix[mid / length][mid % length] == target) {
+            if (matrix[mid / col][mid % col] == target) {
                 return true;
-            } else if (matrix[mid / length][mid % length] < target) {
+            } else if (matrix[mid / col][mid % col] < target) {
                 start = mid;
             } else {
                 end = mid;
@@ -84,7 +84,7 @@ class Solution {
         }
 
         // Right now start and end are two index in a linear array
-        if (matrix[start / length][start % length] == target || matrix[end / length][end % length] == target) {
+        if (matrix[start / col][start % col] == target || matrix[end / col][end % col] == target) {
             return true;
         } else {
             return false;
