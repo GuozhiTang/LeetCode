@@ -47,15 +47,21 @@ import java.util.Stack;
  */
 class Solution {
 
+    // must be outside of the method for recursive
     private List<Integer> result = new ArrayList<>();
 
+    // left -> root -> right
     public List<Integer> inorderTraversal(TreeNode root) {
-        recursiveSol(root);
-        return iterativeSol(root);
+        // return recursiveSolution(root);
+        return iterativeSolution(root);
     }
 
-    private List<Integer> iterativeSol(TreeNode root) {
+    // Time: O(n)
+    // Space: O(n)
+    private List<Integer> iterativeSolution(TreeNode root) {
+
         List<Integer> res = new ArrayList<>();
+
         // Corner Cases
         if (root == null) {
             return res;
@@ -65,6 +71,7 @@ class Solution {
         TreeNode curNode = root;
 
         while (!stack.isEmpty() || curNode != null) {
+            // if there is a curNode, then push items to stack till the left end.
             while (curNode != null) {
                 stack.push(curNode);
                 curNode = curNode.left;
@@ -80,16 +87,15 @@ class Solution {
 
     // Time: O(n)
     // Space: O(n)
-    // Recursion
-    private List<Integer> recursiveSol(TreeNode root) {
+    private List<Integer> recursiveSolution(TreeNode root) {
         // Corner Cases
         if (root == null) {
             return result;
         }
 
-        recursiveSol(root.left);
+        recursiveSolution(root.left);
         result.add(root.val);
-        recursiveSol(root.right);
+        recursiveSolution(root.right);
 
         return result;
     }
