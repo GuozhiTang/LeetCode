@@ -47,17 +47,20 @@ import java.util.Stack;
  * }
  */
 class Solution {
+
     private List<Integer> result = new ArrayList<>();
+
+    // root -> left -> right
     public List<Integer> preorderTraversal(TreeNode root) {
-        recursiveSol(root);
-        return iterativeSol(root);
+        // return recursiveSolution(root);
+        return iterativeSolution(root);
     }
 
     // Time: O(n)
     // Space: O(n)
-    // Iteration
-    private List<Integer> iterativeSol(TreeNode root) {
+    private List<Integer> iterativeSolution(TreeNode root) {
         List<Integer> res = new ArrayList<>();
+
         // Corner Cases
         if (root == null) {
             return res;
@@ -74,21 +77,21 @@ class Solution {
                 stack.push(curNode.left);
             }
         }
+
         return res;
     }
 
     // Time: O(n)
     // Space: O(n)
-    // Recursion
-    private List<Integer> recursiveSol(TreeNode root) {
-        // Corner Cases
+    private List<Integer> recursiveSolution(TreeNode root) {
+        // Corner Case
         if (root == null) {
             return result;
         }
 
         result.add(root.val);
-        recursiveSol(root.left);
-        recursiveSol(root.right);
+        recursiveSolution(root.left);
+        recursiveSolution(root.right);
 
         return result;
     }

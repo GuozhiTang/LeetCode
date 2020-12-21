@@ -51,17 +51,18 @@ class Solution {
 
     private List<Integer> result = new ArrayList<>();
 
+    // left -> right -> root
     public List<Integer> postorderTraversal(TreeNode root) {
-        recursiveSol(root);
-        return iterativeSol(root);
+        // return recursiveSolution(root);
+        return iterativeSolution(root);
     }
 
     // Time: O(n)
     // Space: O(n)
-    // Iteration
-    private List<Integer> iterativeSol(TreeNode root) {
-        // left->right->root
+    private List<Integer> iterativeSolution(TreeNode root) {
+        // This is the MAIN IDEA with .addFirst()!!
         LinkedList<Integer> res = new LinkedList<>();
+
         // Corner Cases
         if (root == null) {
             return res;
@@ -85,15 +86,14 @@ class Solution {
 
     // Time: O(n)
     // Space: O(n)
-    // Recursion
-    private List<Integer> recursiveSol(TreeNode root) {
+    private List<Integer> recursiveSolution(TreeNode root) {
         // Corner Cases
         if (root == null) {
             return result;
         }
 
-        recursiveSol(root.left);
-        recursiveSol(root.right);
+        recursiveSolution(root.left);
+        recursiveSolution(root.right);
         result.add(root.val);
 
         return result;
