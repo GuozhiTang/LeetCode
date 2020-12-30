@@ -87,10 +87,10 @@ class Solution {
             TreeNode rightNode = queue.poll();
 
             if (leftNode == null && rightNode == null) {
-                // why continue here
+                // continue to check whether the queue is empty now
                 continue;
             }
-            if (leftNode == null || rightNode == null || leftNode != rightNode) {
+            if (leftNode == null || rightNode == null || leftNode.val != rightNode.val) {
                 return false;
             }
 
