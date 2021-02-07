@@ -75,62 +75,71 @@ import java.util.Stack;
  * }
  */
 class Solution {
+
     public boolean isSubtree(TreeNode s, TreeNode t) {
-        // return isSubtreeRecursive(s, t);
-        return isSubtreeIterative(s, t);
+        // return isSubtreeIterative(s, t);
+        return isSubtreeRecursive(s, t);
     }
 
-    // Time: O(m*n)
+    public boolean isSubtreeRecursive(TreeNode s, TreeNode t) {
+        // Corner Cases
+        // we are iterate through `s`
+        // so when `s` is null, it means that there is no node's subtree is the same as t
+        // It is also a break condition of the recursion.
+        if (s == null) {
+            return false;
+        }
+
+        if (isSameTree(s, t)) {
+            return true;
+        }
+
+        return isSubtree(s.left, t) || isSubtree(s.right, t);
+    }
+
+    // Time: Worst - O(s*t)
     // Space: O(n)
-    // iteratively
-    // check whether there is a node in s whose subtree is the same as t
+    // The iterative way
     public boolean isSubtreeIterative(TreeNode s, TreeNode t) {
         Stack<TreeNode> stack = new Stack<>();
         stack.push(s);
 
         while (!stack.isEmpty()) {
-            TreeNode node = stack.pop();
-            if (isSameTree(node, t)) {
+            TreeNode curNode = stack.pop();
+            if (isSameTree(curNode, t)) {
                 return true;
             }
-            if (node.right != null) {
-                stack.push(node.right);
+
+            // Pre-order iteration
+            if (curNode.right != null) {
+                stack.push(curNode.right);
             }
-            if (node.left != null) {
-                stack.push(node.left);
+            if (curNode.left != null) {
+                stack.push(curNode.left);
             }
         }
+
         return false;
     }
 
-    // Time: O(m*n)
-    // Space: O(n)
-    // recursively
-    // check whether there is a node in s whose subtree is the same as t
-    public boolean isSubtreeRecursive(TreeNode s, TreeNode t) {
-        if (s == null){
-            return false;
-        }
-        if (isSameTree(s, t)) {
-            return true;
-        }
-        return isSubtreeRecursive(s.left, t) || isSubtreeRecursive(s.right, t);
-    }
-
-    // for each node during pre-order traversal of s,
-    // validate if subtree starts with this node is the same with t
-    public boolean isSameTree(TreeNode s, TreeNode t) {
+    // The helper function to jude whether two nodes' tree archietures are the same
+    public boolean isSameTree(TreeNode node1, TreeNode node2) {
         // Corner Cases
-        if (s == null && t == null){
+        // Also the break condition of the recursion
+        if (node1 == null && node2 == null) {
             return true;
         }
-        if (s == null || t == null) {
+
+        if (node1 == null || node2 == null) {
             return false;
         }
-        if (s.val != t.val) {
+
+        if (node1.val != node2.val) {
             return false;
         }
-        return isSameTree(s.left, t.left) && isSameTree(s.right, t.right);
+
+        // If not, then continue the recursion
+        return isSameTree(node1.left, node2.left) && isSameTree(node1.right, node2.right);
     }
 }
 // @lc code=end
