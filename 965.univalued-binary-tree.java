@@ -78,7 +78,7 @@ class Solution {
     // Time: O(n)
     // Space: O(n)
     // The recursive solution - more interesting than the iterative sol
-    public boolean RecursiveSolution(TreeNode root, int value) {
+    public boolean RecursiveSolution(TreeNode root , int value) {
         // Corner Cases
         if (root == null) {
             return true;
