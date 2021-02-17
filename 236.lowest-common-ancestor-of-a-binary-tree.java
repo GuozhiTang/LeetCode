@@ -1,3 +1,5 @@
+import java.util.*;
+
 /*
  * @lc app=leetcode id=236 lang=java
  *
@@ -63,7 +65,21 @@
  * }
  */
 class Solution {
+
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        return dfsRecursion(root, p, q);
+        // return bfsHashMap(root, p, q);
+    }
+
+    // Time: Worst Case: O(n)
+    // Space: O(h)
+    // Need to diffenciate this to the tree triming/Pruning/Deleting
+    // References: https://blog.csdn.net/happyaaaaaaaaaaa/article/details/51635658
+    private TreeNode dfsRecursion(TreeNode root, TreeNode p, TreeNode q) {
+        // Corner Cases
+        // Break condition:
+        // if reaches p or q => no need to continue recusion due to `Ancestor`.
+        // if reaches null => there is no p or q in this branch.
         if (root == null || root == p || root == q) {
             return root;
         }
@@ -71,15 +87,64 @@ class Solution {
         TreeNode left = lowestCommonAncestor(root.left, p, q);
         TreeNode right = lowestCommonAncestor(root.right, p, q);
 
-        if (left == null) {
-            return right;
+        if (left != null && right != null) {
+            return root; // it would be under root path.
         }
-    
-        if (right == null) {
-        return left;
+        if (left != null) {
+            return left; // means that it finds q or p in left path.
         }
-    
-        return root;
+        return right;
+    }
+
+    // Time: O(n)
+    // Space: O(n)
+    // Use HashMap to store <node, fater node> and use HashSet to compare the common father nodes
+    // References: https://blog.csdn.net/happyaaaaaaaaaaa/article/details/51635658
+    private TreeNode bfsHashMap(TreeNode root, TreeNode p, TreeNode q) {
+        // Corner Cases
+        if (root == null) {
+            return null;
+        }
+
+        // HashMap<node, father node>
+        HashMap<TreeNode, TreeNode> parent = new HashMap<TreeNode, TreeNode>();
+        parent.put(root, null);
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        // find the fater node of p and q
+        // break the while loop only if parent contains both q and p
+        while (!parent.containsKey(p) || !parent.containsKey(q)) {
+            int size = queue.size();
+            for (int index = 0; index < size; index++) {
+                TreeNode curNode = queue.poll();
+                if (curNode != null) {
+                    parent.put(root.left, root);
+                    parent.put(root.right, root);
+                    if (curNode.left != null) {
+                        queue.offer(curNode.left);
+                    }
+                    if (curNode.right != null) {
+                        queue.offer(curNode.right);
+                    }
+                }
+            }
+        }
+
+        HashSet<TreeNode> set = new HashSet<>();
+        // put all p's fater nodes to the set
+        while (p != null) {
+            set.add(p);
+            p = parent.get(p);
+        }
+
+        // Seach when set does not contain q's this father node
+        // which mean returns when find q as well in the set
+        while (!set.contains(q)) {
+            q = parent.get(q);
+        }
+
+        return q; // return this common fater node
     }
 }
 // @lc code=end
