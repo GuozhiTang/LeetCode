@@ -47,66 +47,60 @@ import java.util.Stack;
  */
  class Codec {
 
+    // Time: O(n)
+    // Space: O(n)
     // Encodes a tree to a single string.
+    // The same idea as No.297. This one is a special case.
+    // Pre-order traverse to convert the tree nodes to a string.
+    // Reference: http://www.noteanddata.com/leetcode-297-Serialize-and-Deserialize-Binary-Tree-java-solution-note.html
     public String serialize(TreeNode root) {
         // Corner Cases
         if (root == null) {
-            return "null";
-        }
-        StringBuilder sb = new StringBuilder();
-        // buildString(root, sb);
-        Stack<TreeNode> stack = new Stack<>();
-        stack.push(root);
-        while (!stack.isEmpty()) {
-            TreeNode node = stack.pop();
-            sb.append(node.val).append(",");
-            if (node.right != null) {
-                stack.push(node.right);
-            }
-            if (node.left != null) {
-                stack.push(node.left);
-            }
+            return "#";
         }
 
-        return sb.toString();
+        StringBuilder nodeString = new StringBuilder();
+        nodeString.append(root.val)
+            .append(",").append(serialize(root.left))
+            .append(",").append(serialize(root.right));
+        
+        return nodeString.toString();
     }
 
-    private void buildString(TreeNode root, StringBuilder sb) {
-        if (root == null) {
-            return;
-        }
-        sb.append(root.val).append(",");
-        buildString(root.left, sb);
-        buildString(root.right, sb);
-    }
-
+    // Time: O(n)
+    // Space: O(n)
     // Decodes your encoded data to tree.
+    // The same idea as No.297. This one is a special case.
+    // Use queue + recursion to realize this process.
     public TreeNode deserialize(String data) {
         // Corner Cases
-        if (data.equals("null")) {
+        if (data.length() == 0) {
             return null;
         }
 
-        Queue<Integer> queue = new LinkedList<>();
         String[] nodeArray = data.split(",");
-        for (String nodeStr : nodeArray) {
-            queue.offer(Integer.parseInt(nodeStr));
+
+        Queue<String> queue = new LinkedList<>();
+        for (String node : nodeArray) {
+            queue.offer(node);
         }
-        return getNode(queue);
+
+        return buildTree(queue);
     }
 
-    private TreeNode getNode(Queue<Integer> queue) {
-        // Corner Cases
-        if (queue.isEmpty()) {
+    private TreeNode buildTree(Queue<String> queue) {
+        String curNode = queue.poll();
+
+        // Break Condition
+        if (curNode.equals("#")) {
             return null;
         }
-        Queue<Integer> smallerQueue = new LinkedList<>();
-        TreeNode root = new TreeNode(queue.poll());
-        while (!queue.isEmpty() && queue.peek() < root.val) {
-            smallerQueue.offer(queue.poll());
-        }
-        root.left = getNode(smallerQueue);
-        root.right = getNode(queue);
+
+        TreeNode root = new TreeNode(Integer.valueOf(curNode));
+
+        root.left = buildTree(queue);
+        root.right = buildTree(queue);
+
         return root;
     }
 }
