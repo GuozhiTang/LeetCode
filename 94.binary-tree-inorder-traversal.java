@@ -58,6 +58,7 @@ class Solution {
 
     // Time: O(n)
     // Space: O(n)
+    // Reference: https://leetcode.com/problems/validate-binary-search-tree/discuss/32112/Learn-one-iterative-inorder-traversal-apply-it-to-multiple-tree-questions-(Java-Solution)
     private List<Integer> iterativeSolution(TreeNode root) {
 
         List<Integer> res = new ArrayList<>();
@@ -71,12 +72,13 @@ class Solution {
         TreeNode curNode = root;
 
         while (!stack.isEmpty() || curNode != null) {
-            // if there is a curNode, then push items to stack till the left end.
+            // if there exists a curNode, then push nodes to stack till the left end.
             while (curNode != null) {
                 stack.push(curNode);
                 curNode = curNode.left;
             }
 
+            // there is a case that if curNode is null
             curNode = stack.pop();
             res.add(curNode.val);
             curNode = curNode.right;
