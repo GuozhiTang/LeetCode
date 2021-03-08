@@ -100,7 +100,7 @@ class Solution {
             }
 
             curNode = stack.pop();
-            if (pre != null && curNode.val < pre.val) { // NOTE: "pre != null" not "curNode != null"
+            if (pre != null && curNode.val <= pre.val) { // NOTE: "pre != null" not "curNode != null"
                 return false;
             }
             pre = curNode;
