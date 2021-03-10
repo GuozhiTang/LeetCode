@@ -107,6 +107,7 @@ class Solution {
     // Time: O(n)
     // Space: O(h)
     // Recursive Solution - In-order traverse
+    // Reference: https://blog.csdn.net/fuxuemingzhu/article/details/69666671
     private TreeNode prev;
     private int minDifference = Integer.MAX_VALUE;
     private int recursiveSolution(TreeNode root) {
