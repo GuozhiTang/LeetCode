@@ -1,3 +1,11 @@
+import java.util.List;
+import java.util.Map;
+
+import javax.sound.sampled.SourceDataLine;
+
+import java.util.HashMap;
+import java.util.ArrayList;
+
 /*
  * @lc app=leetcode id=981 lang=java
  *
@@ -85,18 +93,119 @@
 // @lc code=start
 class TimeMap {
 
+    // Definition of Class Data
+    class Data {
+        String value;
+        int timestamp;
+        public Data(String value, int timestamp) {
+            this.value = value;
+            this.timestamp = timestamp;
+        }
+    }
+
     /** Initialize your data structure here. */
+    // Use HashMap to get the key -> List(value, timestamp)
+    Map<String, List<Data>> map;
+    // Constructor
     public TimeMap() {
-        
+        map = new HashMap<String, List<Data>>();
     }
     
     public void set(String key, String value, int timestamp) {
-        
+        // Check whether key already exists
+        if (!map.containsKey(key)) {
+            List<Data> newDataSet = new ArrayList<>();
+            newDataSet.add(new Data(value, timestamp));
+            map.put(key, newDataSet);
+            // map.put(key, new ArrayList<Data>());
+        } else {
+            // if key already exists
+            map.get(key).add(new Data(value, timestamp));
+        }
     }
     
     public String get(String key, int timestamp) {
-        
+        if (!map.containsKey(key)) {
+            return "";
+        } else {
+            // return binarySearch(key, timestamp);
+            return binarySearch(map.get(key), timestamp);
+        }
     }
+
+    // Space: O(logn)
+    // Space: O(n)
+    // Binary Search
+    private String binarySearch(List<Data> pairList, int timestamp) {
+        // pairLits<Data>: value <-> timestamp (ascending)
+        // Corner Cases
+        if (pairList == null || pairList.size() == 0) {
+            return "";
+        }
+
+        int start = 0, end = pairList.size() - 1;
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if (pairList.get(mid).timestamp == timestamp) {
+                return pairList.get(mid).value;
+            } else if (pairList.get(mid).timestamp < timestamp) {
+                start = mid;
+            } else {
+                end = mid;
+            }
+        }
+        
+        // Judge the final "start" and "end" value.
+        if (pairList.get(start).timestamp <= timestamp && timestamp < pairList.get(end).timestamp) {
+            return pairList.get(start).value;
+        } else if (pairList.get(end).timestamp <= timestamp) {
+            return pairList.get(end).value;
+        } else {
+            return "";
+        }
+    }
+
+    // // Time: O(n)
+    // // Space: O(n)
+    // private String binarySearch(String key, int timestamp) {
+    //     List<Data> dataList = map.get(key);
+    //     // Corner Cases
+    //     if (dataList == null || dataList.size() == 0) {
+    //         return "";
+    //     }
+
+    //     int[] timeStampArray = new int[dataList.size()];
+    //     Map<Integer, String> pair = new HashMap<>();
+    //     // O(n)
+    //     for (int index = 0; index < dataList.size(); index++) {
+    //         timeStampArray[index] = dataList.get(index).timestamp;
+    //         System.out.println("timestamp added: Index: " + index + ", timestamp value: " + dataList.get(index).timestamp);
+    //         pair.put(dataList.get(index).timestamp, dataList.get(index).value);
+    //     }
+
+    //     int start = 0, end = timeStampArray.length - 1;
+    //     while (start + 1 < end) {
+    //         int mid = start + (end - start) / 2;
+    //         if (timeStampArray[mid] == timestamp) {
+    //             System.out.println("Mid matched! minIndex: " + mid + ", timestamp: " + timeStampArray[mid] + ", value: " + pair.get(timeStampArray[mid]));
+    //             return pair.get(timeStampArray[mid]);
+    //         } else if (timeStampArray[mid] < timestamp) {
+    //             start = mid;
+    //         } else {
+    //             end = mid;
+    //         }
+    //     }
+
+    //     if (timeStampArray[start] <= timestamp && timestamp < timeStampArray[end]) {
+    //         System.out.println("Start matched! minIndex: " + start + ", timestamp: " + timeStampArray[start] + ", value: " + pair.get(timeStampArray[start]));
+    //         return pair.get(timeStampArray[start]);
+    //     } else if (timeStampArray[end] <= timestamp) {
+    //         System.out.println("Mid matched! minIndex: " + end + ", timestamp: " + timeStampArray[end] + ", value: " + pair.get(timeStampArray[end]));
+    //         return pair.get(timeStampArray[end]);
+    //     } else {
+    //         return "";
+    //     }
+    // }
 }
 
 /**
