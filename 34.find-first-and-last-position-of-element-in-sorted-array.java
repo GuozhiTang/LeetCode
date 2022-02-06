@@ -38,23 +38,23 @@
 class Solution {
 
     // Time: O(logn)
-    // Space: O(1)
+    // Space: O(n)
     // Binary Search
     public int[] searchRange(int[] nums, int target) {
-        // Corner cases
+        // Corner Cases
         if (nums == null || nums.length == 0) {
             return new int[] {-1, -1};
         }
 
-        // Search for the leftIndex of range
+        // Seach for the left index of the range
         int leftIndex = -1;
         int startLeft = 0, endLeft = nums.length - 1;
         while (startLeft + 1 < endLeft) {
-            int midleft = startLeft + (endLeft - startLeft) / 2;
-            if (nums[midleft] < target) {
-                startLeft = midleft;
+            int midLeft = startLeft + (endLeft - startLeft) / 2;
+            if (nums[midLeft] < target) {
+                startLeft = midLeft;
             } else {
-                endLeft = midleft;
+                endLeft = midLeft;
             }
         }
         // Judge the left one first
@@ -64,7 +64,7 @@ class Solution {
             leftIndex = endLeft;
         }
 
-        // Search for the rightIndex of range
+        // Search for the right index of the range
         int rightIndex = -1;
         int startRight = 0, endRight = nums.length - 1;
         while (startRight + 1 < endRight) {
@@ -81,8 +81,60 @@ class Solution {
         } else if (nums[startRight] == target) {
             rightIndex = startRight;
         }
+
         return new int[] {leftIndex, rightIndex};
     }
+
+
+
+    /* ============================== */
+
+    // // Time: O(logn)
+    // // Space: O(1)
+    // // Binary Search
+    // public int[] searchRange(int[] nums, int target) {
+    //     // Corner cases
+    //     if (nums == null || nums.length == 0) {
+    //         return new int[] {-1, -1};
+    //     }
+
+    //     // Search for the leftIndex of range
+    //     int leftIndex = -1;
+    //     int startLeft = 0, endLeft = nums.length - 1;
+    //     while (startLeft + 1 < endLeft) {
+    //         int midleft = startLeft + (endLeft - startLeft) / 2;
+    //         if (nums[midleft] < target) {
+    //             startLeft = midleft;
+    //         } else {
+    //             endLeft = midleft;
+    //         }
+    //     }
+    //     // Judge the left one first
+    //     if (nums[startLeft] == target) {
+    //         leftIndex = startLeft;
+    //     } else if (nums[endLeft] == target) {
+    //         leftIndex = endLeft;
+    //     }
+
+    //     // Search for the rightIndex of range
+    //     int rightIndex = -1;
+    //     int startRight = 0, endRight = nums.length - 1;
+    //     while (startRight + 1 < endRight) {
+    //         int midRight = startRight + (endRight - startRight) / 2;
+    //         if (nums[midRight] > target) {
+    //             endRight = midRight;
+    //         } else {
+    //             startRight = midRight;
+    //         }
+    //     }
+    //     // Judge the right one first
+    //     if (nums[endRight] == target) {
+    //         rightIndex = endRight;
+    //     } else if (nums[startRight] == target) {
+    //         rightIndex = startRight;
+    //     }
+    //     return new int[] {leftIndex, rightIndex};
+    // }
 
     /* ============================== */
 
