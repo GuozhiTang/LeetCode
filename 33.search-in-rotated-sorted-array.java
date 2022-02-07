@@ -47,11 +47,12 @@
 
 // @lc code=start
 class Solution {
+
     // Time: O(logn)
     // Space: O(1)
-    // Binary Search
+    // Binary Search (Find the pure ascending part)
     public int search(int[] nums, int target) {
-        // Corner cases
+        // Corner Cases
         if (nums == null || nums.length == 0) {
             return -1;
         }
@@ -61,16 +62,16 @@ class Solution {
             int mid = start + (end - start) / 2;
             if (nums[mid] == target) {
                 return mid;
-            } else if (nums[start] < nums[mid]) {
-                // the left part
-                if (target >= nums[start] && target <= nums[mid]) {
+            } else if (nums[start] < nums[mid]) { // `start -> mid` is ascending
+                // start -> mid -> pivot -> end
+                if (nums[mid] >= target && target >= nums[start]) {
                     end = mid;
                 } else {
                     start = mid;
                 }
             } else {
-                // the right part
-                if (target >= nums[mid] && target <= nums[end]) {
+                // start -> pivot -> mid -> end
+                if (nums[mid] <= target && target <= nums[end]) {
                     start = mid;
                 } else {
                     end = mid;
@@ -83,8 +84,50 @@ class Solution {
         } else if (nums[end] == target) {
             return end;
         }
+        
         return -1;
     }
+
+    /****************************************************/
+
+    // // Time: O(logn)
+    // // Space: O(1)
+    // // Binary Search
+    // public int search(int[] nums, int target) {
+    //     // Corner cases
+    //     if (nums == null || nums.length == 0) {
+    //         return -1;
+    //     }
+
+    //     int start = 0, end = nums.length - 1;
+    //     while (start + 1 < end) {
+    //         int mid = start + (end - start) / 2;
+    //         if (nums[mid] == target) {
+    //             return mid;
+    //         } else if (nums[start] < nums[mid]) {
+    //             // the left part
+    //             if (target >= nums[start] && target <= nums[mid]) {
+    //                 end = mid;
+    //             } else {
+    //                 start = mid;
+    //             }
+    //         } else {
+    //             // the right part
+    //             if (target >= nums[mid] && target <= nums[end]) {
+    //                 start = mid;
+    //             } else {
+    //                 end = mid;
+    //             }
+    //         }
+    //     }
+
+    //     if (nums[start] == target) {
+    //         return start;
+    //     } else if (nums[end] == target) {
+    //         return end;
+    //     }
+    //     return -1;
+    // }
 }
 // @lc code=end
 

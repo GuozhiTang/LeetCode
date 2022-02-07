@@ -46,11 +46,12 @@
 
 // @lc code=start
 class Solution {
+
     // Time: O(logn)
     // Space: O(1)
-    // Binary Search
+    // Binary Search (find the ascending part)
     public boolean search(int[] nums, int target) {
-        // Corner cases
+        // Corner Cases
         if (nums == null || nums.length == 0) {
             return false;
         }
@@ -60,32 +61,73 @@ class Solution {
             int mid = start + (end - start) / 2;
             if (nums[mid] == target) {
                 return true;
-            } else if (nums[start] < nums[mid]) {
-                // the left part
+            } else if (nums[start] < nums[mid]) { // left part is ascending
                 if (target >= nums[start] && target <= nums[mid]) {
                     end = mid;
                 } else {
                     start = mid;
                 }
-            } else if (nums[start] > nums[mid]) { // two judge the nums[mid] and nums[start]
-                // the right part
-                if (target >= nums[mid] && target <= nums[end]) {
+            } else if (nums[start] > nums[mid]) { // check the right part
+                if (nums[mid] <= target && target <= nums[end]) {
                     start = mid;
                 } else {
                     end = mid;
                 }
-            } else {
-                // if nums[start] == nums[end]
+            } else { // if nums[start] == nums[mid]/nums[end]
                 start++;
             }
         }
 
-        // Judge the adjacent ones
         if (nums[start] == target || nums[end] == target) {
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
+
+
+    /***********************************/
+    
+    // // Time: O(logn)
+    // // Space: O(1)
+    // // Binary Search
+    // public boolean search(int[] nums, int target) {
+    //     // Corner cases
+    //     if (nums == null || nums.length == 0) {
+    //         return false;
+    //     }
+
+    //     int start = 0, end = nums.length - 1;
+    //     while (start + 1 < end) {
+    //         int mid = start + (end - start) / 2;
+    //         if (nums[mid] == target) {
+    //             return true;
+    //         } else if (nums[start] < nums[mid]) {
+    //             // the left part
+    //             if (target >= nums[start] && target <= nums[mid]) {
+    //                 end = mid;
+    //             } else {
+    //                 start = mid;
+    //             }
+    //         } else if (nums[start] > nums[mid]) { // two judge the nums[mid] and nums[start]
+    //             // the right part
+    //             if (target >= nums[mid] && target <= nums[end]) {
+    //                 start = mid;
+    //             } else {
+    //                 end = mid;
+    //             }
+    //         } else {
+    //             // if nums[start] == nums[end]
+    //             start++;
+    //         }
+    //     }
+
+    //     // Judge the adjacent ones
+    //     if (nums[start] == target || nums[end] == target) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 }
 // @lc code=end
 
