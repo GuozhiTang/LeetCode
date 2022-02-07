@@ -1,8 +1,6 @@
 import java.util.List;
 import java.util.Map;
 
-import javax.sound.sampled.SourceDataLine;
-
 import java.util.HashMap;
 import java.util.ArrayList;
 
@@ -134,7 +132,7 @@ class TimeMap {
     }
 
     // Space: O(logn)
-    // Space: O(n)
+    // Space: O(1)
     // Binary Search
     private String binarySearch(List<Data> pairList, int timestamp) {
         // pairLits<Data>: value <-> timestamp (ascending)

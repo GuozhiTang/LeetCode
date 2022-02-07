@@ -54,7 +54,7 @@ class Solution {
 
 
     // Time: O(logn)
-    // Space: O(n)
+    // Space: O(1)
     // Binary Search
     public int searchInsert(int[] nums, int target) {
         // Corner Cases
