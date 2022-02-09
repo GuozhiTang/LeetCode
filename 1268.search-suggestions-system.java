@@ -88,6 +88,83 @@ import java.util.TreeMap;
 // @lc code=start
 class Solution {
 
+    // Trie Node
+    class Node {
+        Node[] children = new Node[26]; // the character after this node
+        String fullString; // if this node is the end, the store this string
+    }
+    
+    // Time: O(n^2)
+    // Space: O(1)
+    // Trie Node
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        Node root = new Node();
+
+        // Time: O(n^2)
+        // Space: O(1)
+        // traverse each word to create the trie
+        for (String word : products) {
+            Node curRoot = root;
+            for (int character = 0; character < word.length(); character++) {
+                // index of current character
+                int letterIndex = word.charAt(character) - 'a';
+                // if current character is not in current node's subnode
+                if (curRoot.children[letterIndex] == null) {
+                    // add current character to the subnode
+                    curRoot.children[letterIndex] = new Node();
+                }
+                // update the current root node
+                curRoot = curRoot.children[letterIndex];
+            }
+            // after inserting all the characters, set current node as the word's ending
+            curRoot.fullString = word;
+        }
+
+        List<List<String>> result = new ArrayList<>();
+
+        // Time: O(n^2)
+        // Space: O(1)
+        // traverse each character of the searchWord
+        for (int letter = 0; letter < searchWord.length(); letter++) {
+            // if root is empty, then there is no such word begining with the character
+            if (root == null) {
+                result.add(new ArrayList<>());
+                continue;
+            }
+            // update the root according to searchWord
+            root = root.children[searchWord.charAt(letter) - 'a'];
+            // get all the words of this root
+            result.add(getList(root, new ArrayList<>()));
+        }
+
+        return result;
+    }
+
+    // Time: O(n)
+    // Space: O(1)
+    private static List<String> getList(Node root, List<String> list) {
+        // if root is empty or have found 3 products, then return
+        if (root == null || list.size() == 3) {
+            return list;
+        }
+
+        // if current node is the ending
+        if (root.fullString != null) {
+            list.add(root.fullString);
+        }
+
+        for (int index = 0; index < 26; index++) {
+            // if there exists characters, recursively get the whole word
+            if (root.children[index] != null) {
+                getList(root.children[index], list);
+            }
+        }
+
+        return list;
+    }
+
+    /*****************************************************************************************/
+
     // Time: O(n);
     // Space: O(n);
     // public List<List<String>> suggestedProducts(String[] products, String searchWord) {
@@ -117,72 +194,74 @@ class Solution {
     //     return res;
     // }
 
-    // Trie Node
-    class Node {
-        Node[] children = new Node[26]; // the character after this node
-        String fullString; // if this node is the end, then store this string
-    }
+    /*****************************************************************************************/
 
-    // Time: O()
-    // Space: O()
-    // Trie
-    public List<List<String>> suggestedProducts (String[] products, String searchWord) {
-        Node root = new Node();
+    // // Trie Node
+    // class Node {
+    //     Node[] children = new Node[26]; // the character after this node
+    //     String fullString; // if this node is the end, then store this string
+    // }
 
-        // traverse each word to create the trie
-        for (String word : products) {
-            Node curRoot = root;
-            // traverse each character of the word to store into the trie
-            for (int letter = 0; letter < word.length(); letter++) {
-                // index of current character
-                int index = word.charAt(letter) - 'a';
-                // if current character is not in current node's subnode
-                if (curRoot.children[index] == null) {
-                    // add current character to the subnode
-                    curRoot.children[index] = new Node();
-                }
-                // update the current root node
-                curRoot = curRoot.children[index];
-            }
-            // after inserting all the characters, set current node as the word's ending
-            curRoot.fullString = word;
-        }
+    // // Time: O()
+    // // Space: O()
+    // // Trie
+    // public List<List<String>> suggestedProducts (String[] products, String searchWord) {
+    //     Node root = new Node();
 
-        List<List<String>> res = new ArrayList<>();
+    //     // traverse each word to create the trie
+    //     for (String word : products) {
+    //         Node curRoot = root;
+    //         // traverse each character of the word to store into the trie
+    //         for (int letter = 0; letter < word.length(); letter++) {
+    //             // index of current character
+    //             int index = word.charAt(letter) - 'a';
+    //             // if current character is not in current node's subnode
+    //             if (curRoot.children[index] == null) {
+    //                 // add current character to the subnode
+    //                 curRoot.children[index] = new Node();
+    //             }
+    //             // update the current root node
+    //             curRoot = curRoot.children[index];
+    //         }
+    //         // after inserting all the characters, set current node as the word's ending
+    //         curRoot.fullString = word;
+    //     }
 
-        // traverse each character of the searchWord
-        for (int letter = 0; letter < searchWord.length(); letter++) {
-            // if root is empty, then there is no such word begining with the character
-            if (root == null) {
-                res.add(new ArrayList<>());
-                continue;
-            }
-            // update the root according to searchWord
-            root = root.children[searchWord.charAt(letter) - 'a'];
-            // get all the words of this root
-            res.add(getList(root, new ArrayList<>()));
-        }
-        return res;
-    }
+    //     List<List<String>> res = new ArrayList<>();
 
-    public static List<String> getList(Node root, List<String> list) {
-        // if root is empty or have found 3 products, return
-        if (root == null || list.size() == 3) {
-            return list;
-        }
-        // if current node is the ending
-        if (root.fullString != null) {
-            list.add(root.fullString);
-        }
+    //     // traverse each character of the searchWord
+    //     for (int letter = 0; letter < searchWord.length(); letter++) {
+    //         // if root is empty, then there is no such word begining with the character
+    //         if (root == null) {
+    //             res.add(new ArrayList<>());
+    //             continue;
+    //         }
+    //         // update the root according to searchWord
+    //         root = root.children[searchWord.charAt(letter) - 'a'];
+    //         // get all the words of this root
+    //         res.add(getList(root, new ArrayList<>()));
+    //     }
+    //     return res;
+    // }
+
+    // public static List<String> getList(Node root, List<String> list) {
+    //     // if root is empty or have found 3 products, return
+    //     if (root == null || list.size() == 3) {
+    //         return list;
+    //     }
+    //     // if current node is the ending
+    //     if (root.fullString != null) {
+    //         list.add(root.fullString);
+    //     }
         
-        for (int index = 0; index < 26; index++) {
-            // if there exists characters, recursively get the whole word
-            if (root.children[index] != null) {
-                getList(root.children[index], list);
-            }
-        }
-        return list;
-    }
+    //     for (int index = 0; index < 26; index++) {
+    //         // if there exists characters, recursively get the whole word
+    //         if (root.children[index] != null) {
+    //             getList(root.children[index], list);
+    //         }
+    //     }
+    //     return list;
+    // }
 }
 // @lc code=end
 

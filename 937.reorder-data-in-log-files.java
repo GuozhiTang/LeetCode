@@ -58,59 +58,117 @@ import java.util.Comparator;
 
 // @lc code=start
 class Solution {
-    // Time: O()
-    // Space: O()
+
+    // Time: O(n)
+    // Space: O(n)
+    // Array + Comparator
     public String[] reorderLogFiles(String[] logs) {
         // Corner Cases
-        if (logs.length == 0 || logs == null) {
+        if (logs == null || logs.length == 0) {
             return new String[0];
         }
-        // scan to see if log contains letter
+
         boolean[] isLetterArray = new boolean[logs.length];
+        int letterCount = 0;
 
-        int lenLetter = 0;
-
-        for (int i = 0; i < logs.length; i++) {
-            boolean isLetter = Character.isLetter(logs[i].charAt((logs[i].length() - 1)));
-            if (isLetter) lenLetter++;
-            isLetterArray[i] = isLetter;
+        // judge each logs is Letter or digits.
+        for (int index = 0; index < logs.length; index++) {
+            boolean isLetter = Character.isLetter(logs[index].charAt(logs[index].length() - 1));
+            if (isLetter) {
+                letterCount++;
+            }
+            isLetterArray[index] = isLetter;
         }
-        
-        String[] ans = new String[logs.length];
-        // use two pointers to move log
-        for (int i = 0, j = 0, k = lenLetter; i < logs.length; i++) {
-            // move letter in position j
+
+        String[] result = new String[logs.length];
+        // Use two pointers to re-order logs in a new array
+        for (int i = 0, j = 0, k = letterCount; i < logs.length; i++) {
             if (isLetterArray[i]) {
-                ans[j] = logs[i];
+                result[j] = logs[i];
                 j++;
-            } else { // move digits in position k
-                ans[k] = logs[i];
+            } else {
+                result[k] = logs[i];
                 k++;
             }
         }
-        
+
         Comparator<String> customizedCom = new Comparator<String>() {
             @Override
             public int compare(String s1, String s2) {
+                // find the index of space
                 int i1 = s1.indexOf(' '), i2 = s2.indexOf(' ');
                 String id1 = s1.substring(0, i1), id2 = s2.substring(0, i2);
-                String word1 = s1.substring(i1), word2 = s2.substring(i2);
+                String content1 = s1.substring(i1), content2 = s2.substring(i2);
                 // if words not the same, compre word1 and word2
-                if (!word1.equals(word2)) {
-                    return word1.compareTo(word2);
-                }
-                // if word is the same, then compare id1 and id2
-                else {
+                if (!content1.equals(content2)) {
+                    return content1.compareTo(content2);
+                } else {
                     return id1.compareTo(id2);
                 }
             }
         };
 
-        // Sort only the log contains letter
-        Arrays.sort(ans, 0, lenLetter, customizedCom);
+        // toIndex `letterCount` is not included!!!
+        Arrays.sort(result, 0, letterCount, customizedCom);
 
-        return ans;
+        return result;
     }
+
+    /***************************************************************/
+
+    // // Time: O()
+    // // Space: O()
+    // public String[] reorderLogFiles(String[] logs) {
+    //     // Corner Cases
+    //     if (logs.length == 0 || logs == null) {
+    //         return new String[0];
+    //     }
+    //     // scan to see if log contains letter
+    //     boolean[] isLetterArray = new boolean[logs.length];
+
+    //     int lenLetter = 0;
+
+    //     for (int i = 0; i < logs.length; i++) {
+    //         boolean isLetter = Character.isLetter(logs[i].charAt((logs[i].length() - 1)));
+    //         if (isLetter) lenLetter++;
+    //         isLetterArray[i] = isLetter;
+    //     }
+        
+    //     String[] ans = new String[logs.length];
+    //     // use two pointers to move log
+    //     for (int i = 0, j = 0, k = lenLetter; i < logs.length; i++) {
+    //         // move letter in position j
+    //         if (isLetterArray[i]) {
+    //             ans[j] = logs[i];
+    //             j++;
+    //         } else { // move digits in position k
+    //             ans[k] = logs[i];
+    //             k++;
+    //         }
+    //     }
+        
+    //     Comparator<String> customizedCom = new Comparator<String>() {
+    //         @Override
+    //         public int compare(String s1, String s2) {
+    //             int i1 = s1.indexOf(' '), i2 = s2.indexOf(' ');
+    //             String id1 = s1.substring(0, i1), id2 = s2.substring(0, i2);
+    //             String word1 = s1.substring(i1), word2 = s2.substring(i2);
+    //             // if words not the same, compre word1 and word2
+    //             if (!word1.equals(word2)) {
+    //                 return word1.compareTo(word2);
+    //             }
+    //             // if word is the same, then compare id1 and id2
+    //             else {
+    //                 return id1.compareTo(id2);
+    //             }
+    //         }
+    //     };
+
+    //     // Sort only the log contains letter
+    //     Arrays.sort(ans, 0, lenLetter, customizedCom);
+
+    //     return ans;
+    // }
 }
 // @lc code=end
 
