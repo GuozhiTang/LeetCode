@@ -53,20 +53,23 @@ import java.util.Map;
 // @lc code=start
 // Time: O(1) - Search: O(1), Add: O(1), Delete: O(1), Update: O(1)
 // Space: O(n)
+// Double Linked List
 class LRUCache {
 
     static class Node {
         private int key;
-        private int val;
+        private int value;
         Node pre, next;
-        public Node (int key, int val) {
+        public Node (int key, int value) {
             this.key = key;
-            this.val = val;
+            this.value = value;
         }
     }
 
     private int capacity;
+    // Use HashMap to store `key -> Node (key->value)`
     private Map<Integer, Node> map;
+    // dummyhead is before real "head", and dummytail is after real "tail"
     private Node dummyhead, dummytail;
 
     public LRUCache(int capacity) {
@@ -80,18 +83,41 @@ class LRUCache {
     
     public int get(int key) {
         Node node = getNode(key);
-        if (node == null) return -1;
-        return node.val;
+        if (node == null) {
+            return -1;
+        }
+        return node.value;
+    }
+    
+    public void put(int key, int value) {
+        Node node = getNode(key);
+        if (node != null) {
+            node.value = value;
+        } else { // if the node does not exist, then add a new node
+            node = new Node(key, value);
+            insertHead(node);
+
+            map.put(key, node);
+            if (map.size() > capacity) {
+                Node tail = dummytail.pre;
+                disconnect(tail); // in this scenario, `disconnect()` makes connection between new "tail" and dummytail.
+                map.remove(tail.key);
+            }
+        }
     }
 
     private Node getNode(int key) {
         Node node = map.get(key);
-        if (node == null) return null;
+        if (node == null) {
+            return null;
+        }
         disconnect(node);
         insertHead(node);
         return node;
     }
 
+    // disconnect part of relationship between node and pre+next
+    // connect double directions for pre and next
     private void disconnect(Node node) {
         node.next.pre = node.pre;
         node.pre.next = node.next;
@@ -103,22 +129,71 @@ class LRUCache {
         node.pre = dummyhead;
         dummyhead.next = node;
     }
-    
-    public void put(int key, int value) {
-        Node node = getNode(key);   
-        if (node != null) node.val = value;
-        else {
-            node = new Node(key, value);
-            insertHead(node);
 
-            map.put(key, node);
-            if (map.size() > capacity) {
-                Node tail = dummytail.pre;
-                disconnect(tail);
-                map.remove(tail.key);
-            }
-        }
-    }
+    // static class Node {
+    //     private int key;
+    //     private int val;
+    //     Node pre, next;
+    //     public Node (int key, int val) {
+    //         this.key = key;
+    //         this.val = val;
+    //     }
+    // }
+
+    // private int capacity;
+    // private Map<Integer, Node> map;
+    // private Node dummyhead, dummytail;
+
+    // public LRUCache(int capacity) {
+    //     this.capacity = capacity;
+    //     this.map = new HashMap<>();
+    //     this.dummyhead = new Node(-1, -1);
+    //     this.dummytail = new Node(-1, -1);
+    //     this.dummyhead.next = this.dummytail;
+    //     this.dummytail.pre = this.dummyhead;
+    // }
+    
+    // public int get(int key) {
+    //     Node node = getNode(key);
+    //     if (node == null) return -1;
+    //     return node.val;
+    // }
+
+    // private Node getNode(int key) {
+    //     Node node = map.get(key);
+    //     if (node == null) return null;
+    //     disconnect(node);
+    //     insertHead(node);
+    //     return node;
+    // }
+
+    // private void disconnect(Node node) {
+    //     node.next.pre = node.pre;
+    //     node.pre.next = node.next;
+    // }
+
+    // private void insertHead(Node node) {
+    //     node.next = dummyhead.next;
+    //     dummyhead.next.pre = node;
+    //     node.pre = dummyhead;
+    //     dummyhead.next = node;
+    // }
+    
+    // public void put(int key, int value) {
+    //     Node node = getNode(key);   
+    //     if (node != null) node.val = value;
+    //     else {
+    //         node = new Node(key, value);
+    //         insertHead(node);
+
+    //         map.put(key, node);
+    //         if (map.size() > capacity) {
+    //             Node tail = dummytail.pre;
+    //             disconnect(tail);
+    //             map.remove(tail.key);
+    //         }
+    //     }
+    // }
 }
 
 /**
