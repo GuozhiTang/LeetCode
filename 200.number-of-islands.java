@@ -53,18 +53,18 @@ class Solution {
     private final char WATER = '0';
     private final int[][] DIRS = new int[][] {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // right-down-left-up
 
-    // Time: O(row*col)
-    // Space: O(row*col)
+    // Time: O(rows*cols)
+    // Space: O(rows*cols)
     // BFS
     public int numIslands(char[][] grid) {
         // Corner Cases
         if (grid.length == 0 || grid == null || grid[0].length == 0) {
-            return 0;
+            return -1;
         }
 
         int rows = grid.length, cols = grid[0].length;
         Queue<int[]> queue = new LinkedList<>();
-        int countIslands = 0;
+        int countIsland = 0;
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
@@ -72,24 +72,25 @@ class Solution {
                     queue.offer(new int[] {row, col});
                     grid[row][col] = WATER;
                     bfs(queue, grid, rows, cols);
-                    countIslands++;
+                    countIsland++;
                 }
             }
         }
-        return countIslands;
+        return countIsland;
     }
 
     private void bfs(Queue<int[]> queue, char[][] grid, int rows, int cols) {
-        while (!queue.isEmpty()) {
+        while(!queue.isEmpty()) {
             int[] position = queue.poll();
 
-            for (int[] dirs : DIRS) {
-                int positionX = position[0] + dirs[0];
-                int positionY = position[1] + dirs[1];
+            for (int[] DIR : DIRS) {
+                int positionX = position[0] + DIR[0];
+                int positionY = position[1] + DIR[1];
 
                 if (!isValid(grid, positionX, positionY, rows, cols)) {
                     continue;
                 }
+
                 grid[positionX][positionY] = WATER;
                 queue.offer(new int[] {positionX, positionY});
             }
@@ -97,13 +98,71 @@ class Solution {
     }
 
     private boolean isValid(char[][] grid, int positionX, int positionY, int rows, int cols) {
-        if (positionX < 0 || positionX >= rows 
+        if (positionX < 0 || positionX >= rows
         || positionY < 0 || positionY >= cols
         || grid[positionX][positionY] == WATER) {
             return false;
         }
         return true;
     }
+
+    /*************************************************************/
+
+    // private final char ISLAND = '1';
+    // private final char WATER = '0';
+    // private final int[][] DIRS = new int[][] {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // right-down-left-up
+
+    // // Time: O(row*col)
+    // // Space: O(row*col)
+    // // BFS
+    // public int numIslands(char[][] grid) {
+    //     // Corner Cases
+    //     if (grid.length == 0 || grid == null || grid[0].length == 0) {
+    //         return 0;
+    //     }
+
+    //     int rows = grid.length, cols = grid[0].length;
+    //     Queue<int[]> queue = new LinkedList<>();
+    //     int countIslands = 0;
+
+    //     for (int row = 0; row < rows; row++) {
+    //         for (int col = 0; col < cols; col++) {
+    //             if (grid[row][col] == ISLAND) {
+    //                 queue.offer(new int[] {row, col});
+    //                 grid[row][col] = WATER;
+    //                 bfs(queue, grid, rows, cols);
+    //                 countIslands++;
+    //             }
+    //         }
+    //     }
+    //     return countIslands;
+    // }
+
+    // private void bfs(Queue<int[]> queue, char[][] grid, int rows, int cols) {
+    //     while (!queue.isEmpty()) {
+    //         int[] position = queue.poll();
+
+    //         for (int[] dirs : DIRS) {
+    //             int positionX = position[0] + dirs[0];
+    //             int positionY = position[1] + dirs[1];
+
+    //             if (!isValid(grid, positionX, positionY, rows, cols)) {
+    //                 continue;
+    //             }
+    //             grid[positionX][positionY] = WATER;
+    //             queue.offer(new int[] {positionX, positionY});
+    //         }
+    //     }
+    // }
+
+    // private boolean isValid(char[][] grid, int positionX, int positionY, int rows, int cols) {
+    //     if (positionX < 0 || positionX >= rows 
+    //     || positionY < 0 || positionY >= cols
+    //     || grid[positionX][positionY] == WATER) {
+    //         return false;
+    //     }
+    //     return true;
+    // }
 }
 // @lc code=end
 
