@@ -71,7 +71,7 @@ class Solution {
     }
 
     // Time: O(n)
-    // Time: O(1)
+    // Time: O(n)
     // HashMap solution
     private int[] hashMapSolution(int[] nums, int target) {
         // Corner Cases
