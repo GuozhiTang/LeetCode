@@ -3,6 +3,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
+
 /*
  * @lc app=leetcode id=767 lang=java
  *
@@ -53,6 +55,7 @@ class Solution {
 
     // Time: O(n)
     // Space: O(n)
+    // Array + Char
     // https://leetcode.com/problems/reorganize-string/discuss/232469/Java-No-Sort-O(N)-0ms-beat-100
     public String reorganizeString(String S) {
         // Corner Cases
@@ -65,14 +68,21 @@ class Solution {
         for (char letter : S.toCharArray()) {
             letterOccurance[letter - 'a']++;
         }
-        
-        int maxOccurance = 0;
+
+        int maxOccurance = 0, maxLetterIndex = 0;
         char maxLetter = ' ';
         // get the max occurance and index
         for (int index = 0; index < letterOccurance.length; index++) {
-            maxOccurance = Math.max(maxOccurance, letterOccurance[index]);
-            maxLetter = (char) (index + 'a');
+            System.out.println("Index " + index + " - letter " + String.valueOf((char)(index + 'a')) + " occurred " + letterOccurance[index] + " times.");
+            if (letterOccurance[index] > maxOccurance) {
+                maxOccurance = letterOccurance[index];
+                maxLetter = (char) (index + 'a');
+                maxLetterIndex = index;
+            }
         }
+
+        System.out.println("maxOccurance: " + maxOccurance);
+        System.out.println("maxLetter: " + maxLetter);
 
         // check if the max occurance times is over (length+1)/2
         if (maxOccurance > (S.length() + 1) / 2) {
@@ -85,6 +95,7 @@ class Solution {
         for (int index = 0; index < maxOccurance; index++) {
             result[inputIndex] = maxLetter;
             inputIndex += 2;
+            letterOccurance[maxLetterIndex]--;
         }
 
         // put the rest of letters into the result array following the same logic
@@ -93,10 +104,9 @@ class Solution {
             for (int num = 0; num < letterOccurance[index]; num++) {
                 if (inputIndex >= S.length()) {
                     inputIndex = 1;
-                } else {
-                    result[inputIndex] = (char) (index + 'a');
-                    inputIndex += 2;
                 }
+                result[inputIndex] = (char) (index + 'a');
+                inputIndex += 2;
             }
         }
 
