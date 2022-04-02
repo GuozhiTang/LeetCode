@@ -59,76 +59,110 @@ import java.util.List;
 // @lc code=start
 class Solution {
 
-    public boolean wordBreak(String s, List<String> wordDict) {
-        HashSet<String> set = new HashSet<>(wordDict);
-        wbRecursion(s, set);
-        wbDP(s, set);
-        return wbDP2(s, wordDict);
-    }
-
-    // Time: O(mn) n: length of string, m: length of set
-    // Space: O(n)
-    // DP2
-    private boolean wbDP2(String s, List<String> wordDict) {
-        // Corner Cases
-        if (s.length() == 0 || s == null) {
-            return true;
-        }
-
-        boolean[] segment = new boolean[s.length() + 1];
-        segment[0] = true;
-
-        for (int i = 1; i <= s.length(); i++) {
-            for (String word : wordDict) {
-                if (word.length() <= i && segment[i - word.length()] && s.substring(i - word.length(), i).equals(word)) {
-                    segment[i] = true;
-                    break;
-                }
-            }
-        }
-
-        return segment[s.length()];
-    }
-
-    // Time: O(n^3) n: length of string
+    // Time: O(2^n)
     // Space: O(n)
     // DP
-    private boolean wbDP(String s, HashSet<String> set) {
+    // https://leetcode.com/problems/word-break/discuss/169383/solved-The-Time-Complexity-of-The-Brute-Force-Method-Should-Be-O(2n)-and-Prove-It-Below
+    public boolean wordBreak(String s, List<String> wordDict) {
         // Corner Cases
-        if (s.length() == 0 || s == null) {
-            return true;
+        if (s == null || s.length() == 0) {
+            return false;
         }
 
-        boolean[] segment = new boolean[s.length() + 1];
-        segment[0] = true;
+        HashSet<String> set = new HashSet<>(wordDict);
 
-        for (int i = 1; i <= s.length(); i++) {
-            for (int j = 0; j < i; j++) {
-                if (segment[j] && set.contains(s.substring(j, i))) {
-                    segment[i] = true;
-                    break;
-                }
-            }
-        }
-        return segment[s.length()];
+        return wb(s, set);
     }
 
-    // Time: O()
-    // Space: O()
-    // Recursion
-    private boolean wbRecursion(String s, HashSet<String> set) {
-        // Corner Cases
-        if (s.length() == 0 || s == null) {
+    private boolean wb(String s, HashSet<String> set) {
+        int length = s.length();
+
+        // break condition
+        if (length == 0) {
             return true;
         }
 
-        for (int index = 1; index <= s.length(); index++) {
-            if (set.contains(s.substring(0, index))  && wbRecursion(s.substring(index), set)) {
+        for (int index = 1; index < length; index++) {
+            if (set.contains(s.substring(0, index)) && wb(s.substring(index), set)) {
                 return true;
             }
         }
+
         return false;
     }
+
+    // =====================================================================
+
+    // public boolean wordBreak(String s, List<String> wordDict) {
+    //     HashSet<String> set = new HashSet<>(wordDict);
+    //     wbRecursion(s, set);
+    //     wbDP(s, set);
+    //     return wbDP2(s, wordDict);
+    // }
+
+    // // Time: O(mn) n: length of string, m: length of set
+    // // Space: O(n)
+    // // DP2
+    // private boolean wbDP2(String s, List<String> wordDict) {
+    //     // Corner Cases
+    //     if (s.length() == 0 || s == null) {
+    //         return true;
+    //     }
+
+    //     boolean[] segment = new boolean[s.length() + 1];
+    //     segment[0] = true;
+
+    //     for (int i = 1; i <= s.length(); i++) {
+    //         for (String word : wordDict) {
+    //             if (word.length() <= i && segment[i - word.length()] && s.substring(i - word.length(), i).equals(word)) {
+    //                 segment[i] = true;
+    //                 break;
+    //             }
+    //         }
+    //     }
+
+    //     return segment[s.length()];
+    // }
+
+    // // Time: O(n^3) n: length of string
+    // // Space: O(n)
+    // // DP
+    // private boolean wbDP(String s, HashSet<String> set) {
+    //     // Corner Cases
+    //     if (s.length() == 0 || s == null) {
+    //         return true;
+    //     }
+
+    //     boolean[] segment = new boolean[s.length() + 1];
+    //     segment[0] = true;
+
+    //     for (int i = 1; i <= s.length(); i++) {
+    //         for (int j = 0; j < i; j++) {
+    //             if (segment[j] && set.contains(s.substring(j, i))) {
+    //                 segment[i] = true;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     return segment[s.length()];
+    // }
+
+    // // Time: O()
+    // // Space: O()
+    // // Recursion
+    // private boolean wbRecursion(String s, HashSet<String> set) {
+    //     // Corner Cases
+    //     if (s.length() == 0 || s == null) {
+    //         return true;
+    //     }
+
+    //     for (int index = 1; index <= s.length(); index++) {
+    //         if (set.contains(s.substring(0, index))  && wbRecursion(s.substring(index), set)) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 }
 // @lc code=end
 

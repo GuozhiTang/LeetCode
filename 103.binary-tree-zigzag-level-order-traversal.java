@@ -55,9 +55,10 @@ import java.util.LinkedList;
  * }
  */
 class Solution {
+
     // Time: O(n)
     // Space: O(n)
-    // BFS
+    // BFS + LinkedList
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
         List<List<Integer>> result = new LinkedList<>();
         // Corner Cases
@@ -67,33 +68,86 @@ class Solution {
 
         Queue<TreeNode> queue = new LinkedList<>();
         queue.offer(root);
-        boolean needReverse = false;
+
+        return bfs(result, queue);
+    }
+
+    private List<List<Integer>> bfs(List<List<Integer>> result, Queue<TreeNode> queue) {
+        boolean reverse = false;
 
         while (!queue.isEmpty()) {
-            int queueSize = queue.size();
+            int curSize = queue.size();
 
-            LinkedList<Integer> resLayer = new LinkedList<>();
-            for (int index = 0; index < queueSize; index++) {
+            // list to store the nodes of each layer
+            LinkedList<Integer> list = new LinkedList<>();
+
+            // layer by layer
+            for (int index = 0; index < curSize; index++) {
                 TreeNode curNode = queue.poll();
 
-                if (needReverse) {
-                    resLayer.addFirst(curNode.val);
+                if (!reverse) {
+                    list.add(curNode.val);
                 } else {
-                    resLayer.add(curNode.val);
+                    list.addFirst(curNode.val);
                 }
 
                 if (curNode.left != null) {
                     queue.offer(curNode.left);
                 }
+                
                 if (curNode.right != null) {
                     queue.offer(curNode.right);
                 }
             }
-            needReverse = !needReverse;
-            result.add(resLayer);
+
+            result.add(list);
+            reverse = !reverse;
         }
+
         return result;
     }
+
+    // =================================================================
+
+    // // Time: O(n)
+    // // Space: O(n)
+    // // BFS
+    // public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+    //     List<List<Integer>> result = new LinkedList<>();
+    //     // Corner Cases
+    //     if (root == null) {
+    //         return result;
+    //     }
+
+    //     Queue<TreeNode> queue = new LinkedList<>();
+    //     queue.offer(root);
+    //     boolean needReverse = false;
+
+    //     while (!queue.isEmpty()) {
+    //         int queueSize = queue.size();
+
+    //         LinkedList<Integer> resLayer = new LinkedList<>();
+    //         for (int index = 0; index < queueSize; index++) {
+    //             TreeNode curNode = queue.poll();
+
+    //             if (needReverse) {
+    //                 resLayer.addFirst(curNode.val);
+    //             } else {
+    //                 resLayer.add(curNode.val);
+    //             }
+
+    //             if (curNode.left != null) {
+    //                 queue.offer(curNode.left);
+    //             }
+    //             if (curNode.right != null) {
+    //                 queue.offer(curNode.right);
+    //             }
+    //         }
+    //         needReverse = !needReverse;
+    //         result.add(resLayer);
+    //     }
+    //     return result;
+    // }
 }
 // @lc code=end
 
