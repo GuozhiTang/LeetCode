@@ -59,10 +59,6 @@ import java.util.List;
 // @lc code=start
 class Solution {
 
-    // Time: O(2^n)
-    // Space: O(n)
-    // DP
-    // https://leetcode.com/problems/word-break/discuss/169383/solved-The-Time-Complexity-of-The-Brute-Force-Method-Should-Be-O(2n)-and-Prove-It-Below
     public boolean wordBreak(String s, List<String> wordDict) {
         // Corner Cases
         if (s == null || s.length() == 0) {
@@ -71,10 +67,36 @@ class Solution {
 
         HashSet<String> set = new HashSet<>(wordDict);
 
-        return wb(s, set);
+        // return bruteForceSolution(s, set);
+        return dpSolution(s, wordDict);
     }
 
-    private boolean wb(String s, HashSet<String> set) {
+    // Time: O(n^3)
+    // Space: O(n)
+    // Dynamic Programming
+    // https://leetcode.com/problems/word-break/discuss/43790/Java-implementation-using-DP-in-two-ways
+    private boolean dpSolution(String s, List<String> wordDict) {
+        boolean[] isSegmented = new boolean[s.length() + 1];
+
+        isSegmented[0] = true;
+
+        for (int curLength = 1; curLength <= s.length(); curLength++) {
+            for (int index = 0; index < curLength; index++) {
+                if (isSegmented[index] && wordDict.contains(s.substring(index, curLength))) {
+                    isSegmented[curLength] = true;
+                    break;
+                }
+            }
+        }
+
+        return isSegmented[s.length()];
+    }
+
+    // Time: O(2^n)
+    // Space: O(n)
+    // DP
+    // https://leetcode.com/problems/word-break/discuss/169383/solved-The-Time-Complexity-of-The-Brute-Force-Method-Should-Be-O(2n)-and-Prove-It-Below
+    private boolean bruteForceSolution(String s, HashSet<String> set) {
         int length = s.length();
 
         // break condition
@@ -83,7 +105,7 @@ class Solution {
         }
 
         for (int index = 1; index < length; index++) {
-            if (set.contains(s.substring(0, index)) && wb(s.substring(index), set)) {
+            if (set.contains(s.substring(0, index)) && bruteForceSolution(s.substring(index), set)) {
                 return true;
             }
         }
