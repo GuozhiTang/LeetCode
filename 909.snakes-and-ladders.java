@@ -93,47 +93,54 @@ import java.util.Queue;
 
 // @lc code=start
 class Solution {
-    // Time: O(N^2)
-    // Space: O(N^2)
+
+    // Time: O(N*N)
+    // Space: O(N*N)
     // BFS
     public int snakesAndLadders(int[][] board) {
         // Corner Cases
-        if (board.length == 0 || board == null || board[0].length == 0) {
-            return 0;
+        if (board == null || board.length == 0 || board[0].length == 0) {
+            return -1;
         }
 
-        int N = board.length;
-
         Queue<Integer> queue = new LinkedList<>();
-        boolean[] visited = new boolean[N * N + 1];
-
         queue.offer(1);
+
+        int N = board.length;
+        boolean[] visited = new boolean[N * N + 1];
         visited[1] = true;
 
-        return bfs(queue, board, N, visited);
+        return bfs(board, visited, queue, N);
     }
 
-    private int bfs(Queue<Integer> queue, int[][] board, int N, boolean[] visited) {
+    private int bfs(int[][] board, boolean[] visited, Queue<Integer> queue, int N) {
         int steps = 1;
+
         while (!queue.isEmpty()) {
             int queueSize = queue.size();
+
+            // layer by layer, here the layer is based on the dise
             for (int index = 0; index < queueSize; index++) {
                 int curVal = queue.poll();
-                for (int moves = 1; moves <= 6; moves++) {
-                    int nextVal = curVal + moves;
-                    int[] nextPos = numToPosition(nextVal, N);
-                    int nextX = nextPos[0], nextY = nextPos[1];
+
+                for (int move = 1; move <= 6; move++) {
+                    int nextVal = curVal + move;
+                    int[] nextPosition = getValueInBoard(nextVal, N);
+                    int nextX = nextPosition[0], nextY = nextPosition[1];
 
                     if (board[nextX][nextY] > 0) {
                         nextVal = board[nextX][nextY];
                     }
 
+                    // check if it is valid
                     if (nextVal > N * N || visited[nextVal]) {
                         continue;
                     }
+
                     if (nextVal == N * N) {
                         return steps;
                     }
+
                     visited[nextVal] = true;
                     queue.offer(nextVal);
                 }
@@ -143,19 +150,21 @@ class Solution {
         return -1;
     }
 
-    private int[] numToPosition(int val, int N) {
-        Map<Integer, int[]> map = new HashMap<>();
+    private int[] getValueInBoard(int value, int N) {
         boolean reverse = false;
+        // curNum - position [x,y]
+        HashMap<Integer, int[]> map = new HashMap<>();
         int curNum = 0;
+
         for (int row = N - 1; row >= 0; row--) {
-            if (reverse) {
-                for (int col = N - 1; col >= 0; col--) {
+            if (!reverse) {
+                for (int col = 0; col < N; col++) {
                     curNum += 1;
                     map.put(curNum, new int[] {row, col});
                 }
                 reverse = !reverse;
             } else {
-                for (int col = 0; col < N; col++) {
+                for (int col = N - 1; col >= 0; col--) {
                     curNum += 1;
                     map.put(curNum, new int[] {row, col});
                 }
@@ -163,8 +172,83 @@ class Solution {
             }
         }
 
-        return map.get(val);
+        return map.get(value);
     }
+
+    // ==========================================================================
+
+    // // Time: O(N^2)
+    // // Space: O(N^2)
+    // // BFS
+    // public int snakesAndLadders(int[][] board) {
+    //     // Corner Cases
+    //     if (board.length == 0 || board == null || board[0].length == 0) {
+    //         return 0;
+    //     }
+
+    //     int N = board.length;
+
+    //     Queue<Integer> queue = new LinkedList<>();
+    //     boolean[] visited = new boolean[N * N + 1];
+
+    //     queue.offer(1);
+    //     visited[1] = true;
+
+    //     return bfs(queue, board, N, visited);
+    // }
+
+    // private int bfs(Queue<Integer> queue, int[][] board, int N, boolean[] visited) {
+    //     int steps = 1;
+    //     while (!queue.isEmpty()) {
+    //         int queueSize = queue.size();
+    //         for (int index = 0; index < queueSize; index++) {
+    //             int curVal = queue.poll();
+    //             for (int moves = 1; moves <= 6; moves++) {
+    //                 int nextVal = curVal + moves;
+    //                 int[] nextPos = numToPosition(nextVal, N);
+    //                 int nextX = nextPos[0], nextY = nextPos[1];
+
+    //                 if (board[nextX][nextY] > 0) {
+    //                     nextVal = board[nextX][nextY];
+    //                 }
+
+    //                 if (nextVal > N * N || visited[nextVal]) {
+    //                     continue;
+    //                 }
+    //                 if (nextVal == N * N) {
+    //                     return steps;
+    //                 }
+    //                 visited[nextVal] = true;
+    //                 queue.offer(nextVal);
+    //             }
+    //         }
+    //         steps++;
+    //     }
+    //     return -1;
+    // }
+
+    // private int[] numToPosition(int val, int N) {
+    //     Map<Integer, int[]> map = new HashMap<>();
+    //     boolean reverse = false;
+    //     int curNum = 0;
+    //     for (int row = N - 1; row >= 0; row--) {
+    //         if (reverse) {
+    //             for (int col = N - 1; col >= 0; col--) {
+    //                 curNum += 1;
+    //                 map.put(curNum, new int[] {row, col});
+    //             }
+    //             reverse = !reverse;
+    //         } else {
+    //             for (int col = 0; col < N; col++) {
+    //                 curNum += 1;
+    //                 map.put(curNum, new int[] {row, col});
+    //             }
+    //             reverse = !reverse;
+    //         }
+    //     }
+
+    //     return map.get(val);
+    // }
 }
 // @lc code=end
 
